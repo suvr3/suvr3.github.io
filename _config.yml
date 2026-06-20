@@ -7,22 +7,22 @@ lang: en
 
 timezone: Asia/Amman
 
-title: Zykl0n
+title: xZenith
 tagline: Penetration Tester | CTF Writeups
-author_name: Zykl0n
+author_name: xZenith
 
 description: >-
   Penetration testing writeups covering HackTheBox and Hacksmarter Labs — AD attack chains, CVE exploitation, and privilege escalation.
 
-url: "https://xykl0n.github.io"
+url: "https://xzenith1.github.io/"
 
 github:
-  username: xykl0n
-
+  username: xZenith1
+  
 social:
-  name: Zykl0n
+  name: xZenith
   links:
-    - https://github.com/xykl0n
+    - https://github.com/xZenith1
 
 webmaster_verifications:
   google:
