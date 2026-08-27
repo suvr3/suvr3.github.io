@@ -7,22 +7,22 @@ lang: en
 
 timezone: Asia/Amman
 
-title: xZenith
+title: Suvre
 tagline: Penetration Tester | CTF Writeups
-author_name: xZenith
+author_name: Suvre
 
 description: >-
   Penetration testing writeups covering HackTheBox and Hacksmarter Labs — AD attack chains, CVE exploitation, and privilege escalation.
 
-url: "https://xzenith1.github.io/"
+url: "https://suvr3.github.io/"
 
 github:
-  username: xZenith1
+  username: Suvre
   
 social:
-  name: xZenith
+  name: Suvre
   links:
-    - https://github.com/xZenith1
+    - https://github.com/Suvre
 
 webmaster_verifications:
   google:
