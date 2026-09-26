@@ -5,13 +5,8 @@ categories: [HTB, HTB-AD]
 tags: [active-directory, writeowner, shadow-credentials, adcs, esc9, kerberoasting, bloodyad, certipy]
 image:
   path: /assets/img/assets/img/certified/banner.png
----
 
-# Description :
 
-*Certified is a medium-difficulty Windows Active Directory machine set up as an assumed breach scenario. Starting with low-privilege credentials, we chain ACL misconfigurations to pivot through three accounts: abusing WriteOwner to take over a group, using GenericWrite for a Shadow Credentials attack, and exploiting an ESC9-vulnerable ADCS template to impersonate the domain administrator.*
-
----
 
 ## Enumeration
 
