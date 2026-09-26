@@ -5,7 +5,7 @@ categories: [HTB, HTB-AD]
 tags: [active-directory, writeowner, shadow-credentials, adcs, esc9, kerberoasting, bloodyad, certipy]
 image:
   path: /assets/img/assets/img/certified/banner.png
-
+---
 
 
 ## Enumeration
