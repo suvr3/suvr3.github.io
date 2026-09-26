@@ -3,7 +3,7 @@ title: "HackTheBox Certified Walkthrough"
 date: 2026-09-26 20:30:00 +0300
 categories: [HTB, HTB-AD]
 tags: [active-directory, writeowner, shadow-credentials, adcs, esc9, kerberoasting, bloodyad, certipy]
-image: /assets/img/certified/header.webp
+
 ---
 
 # Description :
