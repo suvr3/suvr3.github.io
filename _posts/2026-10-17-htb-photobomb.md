@@ -143,7 +143,7 @@ wizard@photobomb:/dev/shm$ ls -al /bin/bash
 
 ![photobomb-suid-bash](/assets/img/photobomb/photobomb-suid-bash.png)
 
-With SUID set, we dropped into a root shell:
+With SUID set we dropped into a root shell:
 
 ```bash
 wizard@photobomb:/dev/shm$ /bin/bash -p
